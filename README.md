@@ -1,16 +1,16 @@
 # Kodhe Javascript
 
-Package pembangkit kode JavaScript/jQuery dari sisi PHP — hasil refaktor library `Javascript` + `Jquery` CodeIgniter 3 (namespace `Kodhe\Framework\Javascript`). Kelas `Javascript` adalah *driver-agnostic wrapper* yang meneruskan pemanggilan ke driver JS aktif (default: jQuery), sementara `Jquery` berisi implementasi konkret untuk event, efek, dan penulisan tag `<script>`.
+A PHP-side JavaScript/jQuery code generator package — a refactored version of the CodeIgniter 3 `Javascript` + `Jquery` libraries (namespace `Kodhe\Framework\Javascript`). The `Javascript` class is a *driver-agnostic wrapper* that forwards calls to the active JS driver (default: jQuery), while `Jquery` contains the concrete implementation for events, effects, and `<script>` tag output.
 
-> ⚠️ **Legacy**: sejak CI 3.0 library ini berstatus deprecated di CodeIgniter. Untuk proyek baru, lebih baik menulis JS modern sendiri; gunakan package ini hanya untuk memelihara aplikasi lama.
+> ⚠️ **Legacy**: since CI 3.0 this library is deprecated in CodeIgniter. For new projects it is better to write modern JS yourself; use this package only to maintain legacy applications.
 
-## Instalasi
+## Installation
 
 ```bash
 composer require kodhe/javascript
 ```
 
-Persyaratan: PHP >= 8.1. Bekerja penuh dalam aplikasi CodeIgniter (membutuhkan instance `kodhe()` dan loader CI untuk `$this->CI->load->library(...)`).
+Requirements: PHP >= 8.1. Works fully inside a CodeIgniter application (requires a `kodhe()` instance and the CI loader for `$this->CI->load->library(...)`).
 
 ## Quick Start
 
@@ -19,7 +19,7 @@ Persyaratan: PHP >= 8.1. Bekerja penuh dalam aplikasi CodeIgniter (membutuhkan i
 
 declare(strict_types=1);
 
-// Dalam konteks aplikasi CI/Kodhe framework:
+// Within a CI/Kodhe framework application context:
 $js = new Kodhe\Framework\Javascript\Javascript();
 
 echo $js->ready(
@@ -30,46 +30,46 @@ echo $js->ready(
 // </script>
 ```
 
-## Struktur Direktori
+## Directory Structure
 
 ```
 src/
-├── Javascript.php   # Wrapper/facade; meneruskan method ke driver ($this->js)
-└── Jquery.php       # Driver jQuery: event, efek, class ops, script(), dll.
+├── Javascript.php   # Wrapper/facade; forwards methods to the driver ($this->js)
+└── Jquery.php       # jQuery driver: events, effects, class operations, script(), etc.
 ```
 
-## Penggunaan
+## Usage
 
-### 1. Memilih driver & autoload script inti
+### 1. Choosing the driver & autoloading the core script
 
 ```php
 $js = new Javascript([
-    'js_library_driver' => 'jquery', // driver yang di-load via CI loader
-    'autoload'          => true,     // langsung cetak <script src="...jquery...">
+    'js_library_driver' => 'jquery', // driver loaded via the CI loader
+    'autoload'          => true,     // immediately prints <script src="...jquery...">
 ]);
 ```
 
-### 2. Event handler
+### 2. Event handlers
 
-Semua event menerima selector elemen (default `'this'`) dan string kode:
+All events accept an element selector (default `'this'`) and a code string:
 
 ```php
 echo $js->change('#kota', 'hitungOngkir();');
-echo $js->click('#hapus', 'return confirm("Yakin?");', false);
+echo $js->click('#delete', 'return confirm("Are you sure?");', false);
 echo $js->hover('#menu', "$('#submenu').show()", "$('#submenu').hide()");
 echo $js->keyup('#cari', 'saran()');
 ```
 
-Tersedia: `blur, change, click, dblclick, error, focus, hover, keydown, keyup, load, mousedown, mouseout, mouseover, mouseup, resize, scroll, unload`.
+Available: `blur, change, click, dblclick, error, focus, hover, keydown, keyup, load, mousedown, mouseout, mouseover, mouseup, resize, scroll, unload`.
 
-### 3. Efek & manipulasi class
+### 3. Effects & class manipulation
 
 ```php
-echo $js->addClass('.kartu', 'aktif');
-echo $js->removeClass('.kartu', 'aktif');
-echo $js->animate('#bola', ['left' => '200px'], 'slow');
+echo $js->addClass('.card', 'active');
+echo $js->removeClass('.card', 'active');
+echo $js->animate('#ball', ['left' => '200px'], 'slow');
 echo $js->fadeIn('#panel', 'fast');
-echo $js->fadeOut('#panel', 'fast', 'bersihkan()');
+echo $js->fadeOut('#panel', 'fast', 'cleanup();');
 echo $js->slideUp('#drawer');
 echo $js->slideDown('#drawer', 'medium');
 echo $js->slideToggle('#drawer');
@@ -77,33 +77,33 @@ echo $js->hide('#elemen');
 echo $js->toggle('#elemen');
 ```
 
-### 4. Membungkus dengan document-ready
+### 4. Wrapping with document-ready
 
 ```php
 echo $js->ready($js->click('#simpan', 'submitForm();'));
 ```
 
-### 5. Menulis tag script / aset jQuery
+### 5. Writing script tags / jQuery assets
 
 ```php
 echo $js->script();                              // <script src=".../js/jquery.js">
-echo $js->script('assets/plugins/mask.js', true);// path relatif terhadap base js
-echo $js->plugin('nifty-corner');                // muat plugin jQuery
-echo $js->ui('draggable');                       // muat komponen jQuery UI
-echo $js->effect('blind');                       // muat efek jQuery UI
+echo $js->script('assets/plugins/mask.js', true);// path relative to the js base
+echo $js->plugin('nifty-corner');                // load a jQuery plugin
+echo $js->ui('draggable');                       // load a jQuery UI component
+echo $js->effect('blind');                       // load a jQuery UI effect
 echo $js->modal('#dialog');                      // setup modal window
-echo $js->sortable('#daftar', ['constraint' => 'vertical']);
-echo $js->tablesorter('#tabel');                 // tabel bisa di-sort
-echo $js->corner('#kartu', 'rounded-small');
+echo $js->sortable('#list', ['constraint' => 'vertical']);
+echo $js->tablesorter('#table');                 // make the table sortable
+echo $js->corner('#card', 'rounded-small');
 ```
 
-### 6. Output mentah
+### 6. Raw output
 
 ```php
-echo $js->output("console.log('jalan');"); // bungkus <script> sendiri
+echo $js->output("console.log('running');"); // wraps in <script> automatically
 ```
 
-## Referensi API (ringkas)
+## API Reference (summary)
 
 | Group | Method |
 |---|---|
@@ -113,18 +113,18 @@ echo $js->output("console.log('jalan');"); // bungkus <script> sendiri
 | Aset | `script plugin ui effect modal corner sortable tablesorter zebraTables` |
 | Util | `ready output alert confirm prompt window_open` |
 
-Semua method pada `Javascript` didelegasikan ke driver (`Jquery`), jadi API-nya identik.
+All methods on `Javascript` are delegated to the driver (`Jquery`), so the APIs are identical.
 
-## Kompatibilitas CodeIgniter 3
+## CodeIgniter 3 Compatibility
 
-Merupakan salinan fungsional `CI_Javascript`/`CI_Jquery`; nama kelas & namespace berubah (`Kodhe\Framework\Javascript\Javascript`). Kontruktor tetap memanggil `$this->CI->load->library('Javascript/'.$driver)` sehingga butuh loader CI. Di luar CI (tanpa `kodhe()`), instantiate `Jquery` secara langsung tidak disarankan karena bergantung helper framework.
+It is a functional copy of `CI_Javascript`/`CI_Jquery`; only the class name & namespace changed (`Kodhe\Framework\Javascript\Javascript`). The constructor still calls `$this->CI->load->library('Javascript/'.$driver)`, so it needs the CI loader. Outside CI (without `kodhe()`), instantiating `Jquery` directly is not recommended because it depends on framework helpers.
 
-## Catatan
+## Notes
 
-- Deprecated secara historis; tidak ada fitur baru yang direncanakan.
-- Elemen `'this'` hanya valid di dalam konteks event DOM library CI lama.
+- Historically deprecated; no new features are planned.
+- The `'this'` element is only valid within the DOM event context of the old CI library.
 
-## Pengujian
+## Testing
 
 ```bash
 vendor/bin/phpunit --filter Javascript
